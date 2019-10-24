@@ -82,6 +82,11 @@ def multiqueue(input_list, function, n_cores=None, expc=None):
 
     ch = CheckerThread(q_done, expc, th, name="th" + str(n_cores))
     ch.start()
-    ch.join()
-
+    try:
+        ch.join()
+    except (Exception, KeyboardInterrupt) as e: 
+        for t in th:
+            t.stop()
+        print(e)
+        
     return list(q_done.queue)
